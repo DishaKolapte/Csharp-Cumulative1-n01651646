@@ -30,30 +30,29 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         [Route("api/TeacherData/ListTeachers/{SearchKey?}")]
         public IEnumerable<Teacher> ListTeachers(string SearchKey = null)
         {
-            //Create an instance of a connection
+
             MySqlConnection Conn = schoodb.AccessDatabase();
 
-            //Open the connection between the web server and database
+
             Conn.Open();
 
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
-            cmd.CommandText = "Select * from Teachers where lower(teacherfname) like lower(@key) or lower(teacherlname) like lower(@key) or lower(concat(teacherfname, ' ', teacherlname)) like lower(@key) ";
+            cmd.CommandText = "Select * from Teachers where lower(teacherfname) like lower(@key) or lower(teacherlname) like lower(@key) or lower(concat(teacherfname, ' ', teacherlname)) like lower(@key)";
 
             cmd.Parameters.AddWithValue("@key", "%" + SearchKey + "%");
             cmd.Prepare();
 
-            //Gather Result Set of Query into a variable
+ 
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
-            //Create an empty list of Teachers
-            List<Teacher> Teachers = new List<Teacher> { };
+            List<Teacher> Teachers = new List<Teacher> { }; //Creates teachers list
 
-            //Loop Through Each Row the Result Set
+
             while (ResultSet.Read())
             {
-                //Access Column information by the DB column name as an index
+
                 int TeacherId = Convert.ToInt32(ResultSet["teacherid"]);
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();
@@ -70,15 +69,15 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 NewTeacher.HireDate = HireDate;
                 NewTeacher.Salary = Salary;
 
-                //Add the Teacher Name to the List
+                //Adds the Teacher Name to the List
                 Teachers.Add(NewTeacher);
             }
 
-            //Close the connection between the MySQL Database and the WebServer
+            //Closes the connection
             Conn.Close();
 
-            //Return the final list of teacher names
-            return Teachers;
+
+            return Teachers;  //Returns the list of teachers names.
         }
 
 
@@ -92,13 +91,13 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         {
             Teacher NewTeacher = new Teacher();
 
-            //Create an instance of a connection
+
             MySqlConnection Conn = schoodb.AccessDatabase();
 
-            //Open the connection between the web server and database
+
             Conn.Open();
 
-            //Establish a new command (query) for our database
+   
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
@@ -106,12 +105,12 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Prepare();
 
-            //Gather Result Set of Query into a variable
+   
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
             while (ResultSet.Read())
             {
-                //Access Column information by the DB column name as an index
+        
                 int TeacherId = Convert.ToInt32(ResultSet["teacherid"]);
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();

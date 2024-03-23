@@ -26,31 +26,31 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         [Route("api/ClassData/ListClass/{SearchKey?}")]
         public IEnumerable<Class> ListClass(string SearchKey = null)
         {
-            //Create an instance of a connection
+         
             MySqlConnection Conn = schoodb.AccessDatabase();
 
-            //Open the connection between the web server and database
+           
             Conn.Open();
 
-            //Establish a new command (query) for our database
+          
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
-            cmd.CommandText = "Select * from Classes where lower(classname) like lower(@key)";
+            cmd.CommandText = "Select * from classes where lower(classname) like lower(@key)";
 
             cmd.Parameters.AddWithValue("@key", "%" + SearchKey + "%");
             cmd.Prepare();
 
-            //Gather Result Set of Query into a variable
+       
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
-            //Create an empty list of Classes
+         
             List<Class> Classes = new List<Class> { };
 
-            //Loop Through Each Row the Result Set
+         
             while (ResultSet.Read())
             {
-                //Access Column information by the DB column name as an index
+               
                 int ClassId = Convert.ToInt32(ResultSet["classid"]);
                 string ClassCode = ResultSet["classcode"].ToString();
                 int TeacherId = Convert.ToInt32(ResultSet["teacherid"]); ;
@@ -69,15 +69,15 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 NewClass.ClassName = ClassName;
 
 
-                //Add the Class Name to the List
+                
                 Classes.Add(NewClass);
             }
 
-            //Close the connection between the MySQL Database and the WebServer
+            //Closes the connection.
             Conn.Close();
 
-            //Return the final list of class names
-            return Classes;
+            
+            return Classes; //Returns the list of class names
         }
 
 
@@ -91,13 +91,13 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         {
             Class NewClass = new Class();
 
-            //Create an instance of a connection
+         
             MySqlConnection Conn = schoodb.AccessDatabase();
 
-            //Open the connection between the web server and database
+            
             Conn.Open();
 
-            //Establish a new command (query) for our database
+            
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
@@ -105,12 +105,12 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Prepare();
 
-            //Gather Result Set of Query into a variable
+            
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
             while (ResultSet.Read())
             {
-                //Access Column information by the DB column name as an index
+                
                 int ClassId = Convert.ToInt32(ResultSet["classid"]);
                 string ClassCode = ResultSet["classcode"].ToString();
                 int TeacherId = Convert.ToInt32(ResultSet["teacherid"]); ;
