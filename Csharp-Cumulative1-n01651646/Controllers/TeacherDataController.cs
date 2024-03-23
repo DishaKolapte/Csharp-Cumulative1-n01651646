@@ -36,7 +36,6 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             //Open the connection between the web server and database
             Conn.Open();
 
-            //Establish a new command (query) for our database
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
