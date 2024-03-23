@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "ClassList";
+}
+
+<div id="containerlist">
+    <h2>ClassList of Classs</h2>
+    <form action="/Class/ClassList" method="GET">
+        <input type="text" name="SearchKey" autocomplete="off" />
+        <input type="submit" value="Search" />
+    </form>
+    @foreach (var Class in Model)
+    {
+        <div class="listitem row">
+            <div class="col-md-12"><a href="/Class/ClassShow/@Class.ClassId">@Class.ClassCode @Class.ClassName</a></div>
+        </div>
+    }
+</div>
+
