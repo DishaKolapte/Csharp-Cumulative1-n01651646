@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Web.Http;
 using Csharp_Cumulative1_n01651646.Models;
 using MySql.Data.MySqlClient;
 using Mysqlx.Datatypes;
+using System.Web.Http.Cors;
 
 
 
@@ -57,7 +59,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();
                 string EmployeeNumber = ResultSet["employeenumber"].ToString();
-                string HireDate = ResultSet["hiredate"].ToString();
+                DateTime HireDate = Convert.ToDateTime(ResultSet["hiredate"]);
                 string Salary = ResultSet["salary"].ToString();
 
 
@@ -115,7 +117,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();
                 string EmployeeNumber = ResultSet["employeenumber"].ToString();
-                string HireDate = ResultSet["hiredate"].ToString();
+                DateTime HireDate = Convert.ToDateTime(ResultSet["hiredate"]);
                 string Salary = ResultSet["salary"].ToString();
 
 
@@ -131,6 +133,65 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 
 
             return NewTeacher;
+
+        }
+        [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        public void AddTeacher([FromBody] Teacher NewTeacher)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = schoodb.AccessDatabase();
+
+            Debug.WriteLine(NewTeacher.TeacherFname);
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "insert into teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) values (@TeacherFname,@TeacherLname,@EmployeeNumber, @HireDate, @Salary)";
+            cmd.Parameters.AddWithValue("@TeacherFname", NewTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", NewTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@EmployeeNumber", NewTeacher.EmployeeNumber);
+            cmd.Parameters.AddWithValue("@HireDate", NewTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", NewTeacher.Salary);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
+
+
+        }
+        /// <summary>
+        /// Deletes an Teacher from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity.
+        /// </summary>
+        /// <param name="id">The ID of the author.</param>
+        /// <example>POST /api/TeacherData/DeleteTeacher/3</example>
+        [HttpPost]
+        public void DeleteTeacher(int id)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = schoodb.AccessDatabase();
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "Delete from teachers where teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
 
         }
     }

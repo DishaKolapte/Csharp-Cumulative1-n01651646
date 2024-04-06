@@ -12,7 +12,7 @@ namespace Csharp_Cumulative1_n01651646.Models
         public string TeacherFname;
         public string TeacherLname;
         public string EmployeeNumber;
-        public string HireDate;
+        public DateTime HireDate;
         public string Salary;
     }
 }
