@@ -2,10 +2,12 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Csharp_Cumulative1_n01651646.Controllers
 {
@@ -55,7 +57,8 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 string StudentFname = ResultSet["studentfname"].ToString();
                 string StudentLname = ResultSet["studentlname"].ToString();
                 string StudentNumber = ResultSet["studentnumber"].ToString();
-                string EnrolDate = ResultSet["enroldate"].ToString();
+                DateTime EnrolDate = Convert.ToDateTime(ResultSet["enroldate"]);
+
 
 
 
@@ -113,7 +116,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
                 string StudentFname = ResultSet["studentfname"].ToString();
                 string StudentLname = ResultSet["studentlname"].ToString();
                 string StudentNumber = ResultSet["studentnumber"].ToString();
-                string EnrolDate = ResultSet["enroldate"].ToString();
+                DateTime EnrolDate = Convert.ToDateTime(ResultSet["enroldate"]);
 
 
 
@@ -126,6 +129,66 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 
             }
             return NewStudent;
+        }
+        [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        public void AddStudent([FromBody] Student NewStudent)
+        {
+            if (!NewStudent.IsValid()) return;  // Server side validation. 
+
+            //Create an instance of a connection
+            MySqlConnection Conn = schoodb.AccessDatabase();
+
+            Debug.WriteLine(NewStudent.StudentFname);
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "insert into students (studentfname, studentlname, studentnumber, enroldate) values (@StudentFname,@StudentLname,@StudentNumber, @EnrolDate)";
+            cmd.Parameters.AddWithValue("@StudentFname", NewStudent.StudentFname);
+            cmd.Parameters.AddWithValue("@StudentLname", NewStudent.StudentLname);
+            cmd.Parameters.AddWithValue("@StudentNumber", NewStudent.StudentNumber);
+            cmd.Parameters.AddWithValue("@Enroldate", NewStudent.EnrolDate);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
+
+
+        }
+        /// <summary>
+        /// Deletes an Student from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity.
+        /// </summary>
+        /// <param name="id">The ID of the author.</param>
+        /// <example>POST /api/StudentData/DeleteStudent/3</example>
+        [HttpPost]
+        public void DeleteStudent(int id)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = schoodb.AccessDatabase();
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "Delete from students where studentid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
+
         }
     }
 }

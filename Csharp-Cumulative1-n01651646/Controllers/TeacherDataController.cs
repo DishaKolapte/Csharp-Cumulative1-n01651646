@@ -139,6 +139,8 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void AddTeacher([FromBody] Teacher NewTeacher)
         {
+            if (!NewTeacher.IsValid()) return;  // Server side validation. 
+
             //Create an instance of a connection
             MySqlConnection Conn = schoodb.AccessDatabase();
 

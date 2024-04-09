@@ -11,6 +11,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 {
     public class TeacherController : Controller
     {
+
         // GET: Teacher
         public ActionResult Index()
         {
@@ -38,26 +39,30 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         [HttpPost]
         public ActionResult Create( string TeacherFname, string TeacherLname, string EmployeeNumber, DateTime HireDate, string Salary)
         {
-            //Identify that this method is running
-            //Identify the inputs provided from the form
 
-            Debug.WriteLine("I have accessed the Create Method!");
-            Debug.WriteLine(TeacherFname);
-            Debug.WriteLine(TeacherLname);
-            Debug.WriteLine(EmployeeNumber);
-            Debug.WriteLine(HireDate);
-            Debug.WriteLine(Salary);
+ 
 
 
-            Teacher NewTeacher = new Teacher();;
-            NewTeacher.TeacherFname = TeacherFname;
-            NewTeacher.TeacherLname = TeacherLname;
-            NewTeacher.EmployeeNumber = EmployeeNumber;
-            NewTeacher.HireDate = HireDate;
-            NewTeacher.Salary = Salary;
+                Debug.WriteLine("I have accessed the Create Method!");
+                Debug.WriteLine(TeacherFname);
+                Debug.WriteLine(TeacherLname);
+                Debug.WriteLine(EmployeeNumber);
+                Debug.WriteLine(HireDate);
+                Debug.WriteLine(Salary);
 
-            TeacherDataController controller = new TeacherDataController();
-            controller.AddTeacher(NewTeacher);
+
+                Teacher NewTeacher = new Teacher(); ;
+                NewTeacher.TeacherFname = TeacherFname;
+                NewTeacher.TeacherLname = TeacherLname;
+                NewTeacher.EmployeeNumber = EmployeeNumber;
+                NewTeacher.HireDate = HireDate;
+                NewTeacher.Salary = Salary;
+
+                TeacherDataController controller = new TeacherDataController();
+                controller.AddTeacher(NewTeacher);
+            
+
+
 
             return RedirectToAction("List");
         }
@@ -85,6 +90,8 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         public ActionResult addNew()
         {
             return View();
+
+            
         }
 
         //GET : /Teacher/Ajax_New
