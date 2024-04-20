@@ -46,7 +46,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             cmd.Parameters.AddWithValue("@key", "%" + SearchKey + "%");
             cmd.Prepare();
 
- 
+
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
             List<Teacher> Teachers = new List<Teacher> { }; //Creates teachers list
@@ -99,7 +99,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 
             Conn.Open();
 
-   
+
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
@@ -107,12 +107,12 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Prepare();
 
-   
+
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
             while (ResultSet.Read())
             {
-        
+
                 int TeacherId = Convert.ToInt32(ResultSet["teacherid"]);
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();
@@ -169,9 +169,9 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 
         }
         /// <summary>
-        /// Deletes an Teacher from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity.
+        /// Deletes an Teacher from the connected MySQL Database if the ID of that teacher exists. Does NOT maintain relational integrity.
         /// </summary>
-        /// <param name="id">The ID of the author.</param>
+        /// <param name="id">The ID of the teacher.</param>
         /// <example>POST /api/TeacherData/DeleteTeacher/3</example>
         [HttpPost]
         public void DeleteTeacher(int id)
@@ -195,6 +195,79 @@ namespace Csharp_Cumulative1_n01651646.Controllers
             Conn.Close();
 
 
+        }
+        /// <summary>
+        /// Updates an Teacher on the MySQL Database. 
+        /// </summary>
+        /// <param name="TeacherInfo">An object with fields that map to the columns of the teacher's table.</param>
+        /// <example>
+        /// POST api/TeacherData/UpdateTeacher/208 
+        /// FORM DATA / POST DATA / REQUEST BODY 
+        /// {
+        ///	"TeacherFname":"Christine",
+        ///	"TeacherLname":"Bittle",
+        ///	"EmployeeNumber":"Likes Coding!",
+        ///	"HireDate":"christine@test.ca"
+        /// }
+        /// </example>
+        [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        [Route("api/TeacherData/UpdateTeacher/{id}")]
+        public void UpdateTeacher(int id, [FromBody] Teacher TeacherInfo)
+        {
+
+
+            //Exit method if model fields are not included.
+            if (!TeacherInfo.IsValid()) return;
+            MySqlConnection Conn = schoodb.AccessDatabase();
+            try
+            {
+                
+                //Open the connection between the web server and database
+                Conn.Open();
+
+                //Establish a new command (query) for our database
+                MySqlCommand cmd = Conn.CreateCommand();
+
+                //SQL QUERY
+               // Debug.WriteLine(TeacherInfo.TeacherFname);
+               // Debug.WriteLine(TeacherInfo.TeacherLname);
+               // Debug.WriteLine(TeacherInfo.EmployeeNumber);
+               // Debug.WriteLine(TeacherInfo.HireDate);
+               // Debug.WriteLine(TeacherInfo.Salary);
+                
+
+                cmd.CommandText = "UPDATE teachers SET teacherfname=@TeacherFname, teacherlname=@TeacherLname, employeenumber=@EmployeeNumber, hiredate=@HireDate WHERE teacherid=@TeacherId";
+                cmd.Parameters.AddWithValue("@TeacherFname", TeacherInfo.TeacherFname);
+                cmd.Parameters.AddWithValue("@TeacherLname", TeacherInfo.TeacherLname);
+                cmd.Parameters.AddWithValue("@EmployeeNumber", TeacherInfo.EmployeeNumber);
+                cmd.Parameters.AddWithValue("@HireDate", TeacherInfo.HireDate);
+                cmd.Parameters.AddWithValue("@Salary", TeacherInfo.Salary);
+                cmd.Parameters.AddWithValue("@TeacherId", id);
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (MySqlException ex)
+            {
+                //Catches issues with MySQL.
+                Debug.WriteLine(ex);
+                throw new ApplicationException("Issue was a database issue.", ex);
+            }
+            catch (Exception ex)
+            {
+                //Catches generic issues
+                Debug.Write(ex);
+                throw new ApplicationException("There was a server issue.", ex);
+            }
+            finally
+            {
+
+                //Close the connection between the MySQL Database and the WebServer
+                Conn.Close();
+
+            }
         }
     }
 }

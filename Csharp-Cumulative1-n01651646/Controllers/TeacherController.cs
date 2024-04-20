@@ -101,6 +101,98 @@ namespace Csharp_Cumulative1_n01651646.Controllers
 
         }
 
+        /// <summary>
+        /// Routes to a dynamically generated "Teacher Update" Page. Gathers information from the database.
+        /// </summary>
+        /// <param name="id">Id of the Teacher</param>
+        /// <returns>A dynamic "Update Teacher" webpage which provides the current information of the teacher and asks the user for new information as part of a form.</returns>
+        /// <example>GET : /Teacher/Update/5</example>
+        public ActionResult Update(int id)
+        {
+            try
+            {
+                TeacherDataController controller = new TeacherDataController();
+                Teacher SelectedTeacher = controller.FindTeacher(id);
+                return View(SelectedTeacher);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
+
+        }
+
+        /// <summary>
+        /// Routes to a dynamically rendered "Ajax Update" Page. The "Ajax Update" page will utilize JavaScript to send an HTTP Request to the data access layer (/api/TeacherData/UpdateTeacher)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Ajax_Update(int id)
+        {
+            try
+            {
+                TeacherDataController controller = new TeacherDataController();
+                Teacher SelectedTeacher =controller.FindTeacher(id);
+                return View(SelectedTeacher);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+
+        /// <summary>
+        /// Receives a POST request containing information about an existing teacher in the system, with new values. Conveys this information to the API, and redirects to the "Teacher Show" page of our updated teacher.
+        /// </summary>
+        /// <param name="id">Id of the Teacher to update</param>
+        /// <param name="TeacherFname">The updated first name of the teacher</param>
+        /// <param name="TeacherLname">The updated last name of the teacher</param>
+        /// <param name="EmployeeNumber">The updated bio of the teacher.</param>
+        /// <param name="HireDate">The updated email of the teacher.</param>
+        /// <returns>A dynamic webpage which provides the current information of the teacher.</returns>
+        /// <example>
+        /// POST : /Teacher/Update/10
+        /// FORM DATA / POST DATA / REQUEST BODY 
+        /// {
+        ///	"TeacherFname":"Christine",
+        ///	"TeacherLname":"Bittle",
+        ///	"EmployeeNumber":"Loves Coding!",
+        ///	"HireDate":"christine@test.ca"
+        /// }
+        /// </example>
+        [HttpPost]
+        public ActionResult Update(int id,string TeacherFname, string TeacherLname, string EmployeeNumber, DateTime HireDate, string Salary)
+        {
+            try
+            {
+                TeacherDataController controller = new TeacherDataController();
+                Teacher TeacherInfo = new Teacher();
+                TeacherInfo.TeacherFname = TeacherFname;
+                TeacherInfo.TeacherLname = TeacherLname;
+                TeacherInfo.EmployeeNumber = EmployeeNumber;
+                TeacherInfo.HireDate = HireDate;
+                TeacherInfo.Salary = Salary;
+
+                controller.UpdateTeacher(id, TeacherInfo);
+                Debug.WriteLine("try");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                Debug.WriteLine("catch");
+                return RedirectToAction("Error", "Home");
+                
+            }
+
+
+            return RedirectToAction("Show/" +id);
+        }
 
     }
 }
+
+
+   
