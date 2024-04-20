@@ -150,17 +150,13 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         /// <param name="id">Id of the Teacher to update</param>
         /// <param name="TeacherFname">The updated first name of the teacher</param>
         /// <param name="TeacherLname">The updated last name of the teacher</param>
-        /// <param name="EmployeeNumber">The updated bio of the teacher.</param>
-        /// <param name="HireDate">The updated email of the teacher.</param>
+        /// <param name="EmployeeNumber">The update employee number for the teacher.</param>
+        /// <param name="HireDate">The updated hiredate of the teacher.</param>
         /// <returns>A dynamic webpage which provides the current information of the teacher.</returns>
         /// <example>
         /// POST : /Teacher/Update/10
         /// FORM DATA / POST DATA / REQUEST BODY 
         /// {
-        ///	"TeacherFname":"Christine",
-        ///	"TeacherLname":"Bittle",
-        ///	"EmployeeNumber":"Loves Coding!",
-        ///	"HireDate":"christine@test.ca"
         /// }
         /// </example>
         [HttpPost]

@@ -9,14 +9,11 @@
 
         //goal: send a request which looks like this:
         //POST : http:/api/TeacherData/UpdateTeacher/{id}
-        //with POST data of authorname, bio, email, etc.
+        
 
         var URL = "/api/TeacherData/UpdateTeacher/" + TeacherId;
 
         var rq = new XMLHttpRequest();
-        // where is this request sent to?
-        // is the method GET or POST?
-        // what should we do with the response?
 
         var TeacherFname = document.getElementById('TeacherFname').value;
         var TeacherLname = document.getElementById('TeacherLname').value;
@@ -60,7 +57,7 @@
     </nav>
     <h2>Update @Model.TeacherFname @Model.TeacherLname</h2>
     @{
-        /* AJAX Request to update author */
+        /* AJAX Request to update teacher */
         /* No form submission needed */
         /* button onclick will handle form submission */
         /* Each item has an ID for validation && ajax submission */
@@ -90,7 +87,7 @@
         <input type="text" id="Salary" name="Salary" value="@Model.Salary" />
     </div>
     @{
-        //AddTeacher() is a JS method defined in /Scripts/authors.js
+        //AddTeacher() is a JS method defined in /Scripts/teacher.js
     }
     <button onclick="UpdateTeacher(@Model.TeacherId);">Update Teacher</button>
 </div>

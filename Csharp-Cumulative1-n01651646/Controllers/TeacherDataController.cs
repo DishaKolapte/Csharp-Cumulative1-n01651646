@@ -204,10 +204,7 @@ namespace Csharp_Cumulative1_n01651646.Controllers
         /// POST api/TeacherData/UpdateTeacher/208 
         /// FORM DATA / POST DATA / REQUEST BODY 
         /// {
-        ///	"TeacherFname":"Christine",
-        ///	"TeacherLname":"Bittle",
-        ///	"EmployeeNumber":"Likes Coding!",
-        ///	"HireDate":"christine@test.ca"
+
         /// }
         /// </example>
         [HttpPost]
